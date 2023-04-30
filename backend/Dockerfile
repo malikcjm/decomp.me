@@ -89,6 +89,8 @@ COPY --from=devkitpro/devkitarm:20210726 /opt/devkitpro/devkitARM/bin/arm* /usr/
 
 # download compilers
 COPY compilers/download.py /compilers/
+ADD compilers/watcom.tar /compilers/
+COPY compilers/jwasm /usr/bin/
 
 ARG ENABLE_GBA_SUPPORT
 ARG ENABLE_N64_SUPPORT

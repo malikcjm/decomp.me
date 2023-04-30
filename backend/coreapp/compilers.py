@@ -17,6 +17,7 @@ from coreapp.flags import (
     COMMON_IDO_FLAGS,
     COMMON_MWCC_FLAGS,
     COMMON_GCC_SATURN_FLAGS,
+    COMMON_WATCOM_FLAGS,
     Flags,
 )
 
@@ -34,6 +35,7 @@ from coreapp.platforms import (
     PS2,
     SWITCH,
     SATURN,
+    WATCOM,
 )
 
 import platform as platform_stdlib
@@ -80,6 +82,7 @@ class Compiler:
 
     def available(self) -> bool:
         # consider compiler binaries present if the compiler's directory is found
+        logger.info(f"Checking if {self.id} path {self.path} exists")
         return self.path.exists()
 
 
@@ -111,6 +114,13 @@ class DummyCompiler(Compiler):
 class DummyLongRunningCompiler(DummyCompiler):
     def available(self) -> bool:
         return settings.DUMMY_COMPILER and platform_stdlib.system() != "Windows"
+
+@dataclass(frozen=True)
+class WatcomCompiler(Compiler):
+    base_id: "watcom"
+    flags: ClassVar[Flags] = COMMON_WATCOM_FLAGS
+    platform: WATCOM
+    cc: "wcc"
 
 
 @dataclass(frozen=True)
@@ -651,6 +661,13 @@ PBX_GCC3 = GCCCompiler(
     cc=GCC_CC1_ALT,
 )
 
+WATCOM_19 = WatcomCompiler(
+    id="wcc-19",
+    platform=WATCOM,
+    cc='${COMPILER_DIR}/binl/wcc "${COMPILER_FLAGS}" -fo"${OUTPUT}" "${INPUT}"',
+    base_id="watcom",
+)
+
 # GC_WII
 # Thanks to Gordon Davisson for the xargs trick:
 # https://superuser.com/questions/1529226/get-bash-to-respect-quotes-when-word-splitting-subshell-output/1529316#1529316
@@ -1014,6 +1031,8 @@ _all_compilers: List[Compiler] = [
     XCODE_GCC400_C,
     XCODE_GCC400_CPP,
     PBX_GCC3,
+    #WATCOM
+    WATCOM_19,
 ]
 
 # MKWII Common flags
@@ -1496,6 +1515,11 @@ _all_presets = [
         EE_GCC29_991111,
         "-x c++ -O2 -fno-exceptions -gstabs -ffast-math",
     ),
+    Preset(
+        "Ace Ventura",
+        WATCOM_19,
+        "-d0 -s -we -wx -zW -ecp -mm -q -zl -zls -fpr -nm='' -nt='codeseg' -fp2 -zls -zld -bt=windows -s -I/opt/watcom/h/win -I/opt/watcom/h/ -2"
+    )
 ]
 
 

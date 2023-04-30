@@ -19,6 +19,7 @@ class Platform:
     objdump_cmd: str
     nm_cmd: str
     asm_prelude: str
+    asm_epilog: str = ""
     diff_flags: Flags = field(default_factory=lambda: COMMON_DIFF_FLAGS, hash=False)
     supports_objdump_disassemble: bool = False  # TODO turn into objdump flag
 
@@ -708,6 +709,28 @@ N3DS = Platform(
     asm_prelude="",
 )
 
+WATCOM = Platform(
+    id="watcom",
+    name="WATCOM NE",
+    description="watcom/ne",
+    arch="i686",
+    assemble_cmd='jwasm -q -eq -2 -Cp -e10000 -mm -Fo"$OUTPUT" "$INPUT"',
+    objdump_cmd="wdis",
+    nm_cmd="echo",
+    asm_prelude="""
+codeseg segment          word public 'CODE' use16
+.code codeseg
+OPTION PROCALIGN:1
+
+""",
+    asm_epilog="""
+
+codeseg ends
+end
+"""
+
+)
+
 _platforms: OrderedDict[str, Platform] = OrderedDict(
     {
         "dummy": DUMMY,
@@ -723,5 +746,6 @@ _platforms: OrderedDict[str, Platform] = OrderedDict(
         "macos9": MACOS9,
         "macosx": MACOSX,
         "n3ds": N3DS,
+        "watcom": WATCOM,
     }
 )

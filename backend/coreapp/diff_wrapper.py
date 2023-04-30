@@ -161,6 +161,9 @@ class DiffWrapper:
 
             flags += config.arch.arch_flags
 
+            if platform.id == "watcom":
+                flags = ['-a']
+
             if platform.objdump_cmd:
                 try:
                     objdump_proc = sandbox.run_subprocess(

@@ -14,7 +14,7 @@ services:
       context: backend
       args:
         ENABLE_GBA_SUPPORT: "YES"
-        ENABLE_N64_SUPPORT: "YES"
+        ENABLE_N64_SUPPORT: "NO"
         # dont install wine32 etc by default
         ENABLE_NDS_SUPPORT: "NO"
         ENABLE_PS1_SUPPORT: "NO"

@@ -827,7 +827,7 @@ def main(args):
     def should_download(platform):
         # assume enabled unless explicitly disabled
         return (
-            os.environ.get(f"ENABLE_{platform.upper()}_SUPPORT", "YES").upper() != "NO"
+            os.environ.get(f"ENABLE_{platform.upper()}_SUPPORT", "NO").upper() != "NO"
         )
 
     if should_download("gba"):

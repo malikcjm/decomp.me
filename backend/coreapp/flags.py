@@ -41,6 +41,15 @@ COMMON_ARMCC_FLAGS: Flags = [
     Checkbox(id="armcc_debug", flag="--debug"),
 ]
 
+COMMON_WATCOM_FLAGS: Flags = [
+    FlagSet(
+        id="x86_instset", flags=["-0", "-1", "-2", "-3"]
+    ),
+    FlagSet(
+        id="call_conv", flags=["-ecc", "-ecd", "-ecf", "-ecp", "-ecr"]
+    ),
+]
+
 COMMON_CLANG_FLAGS: Flags = [
     FlagSet(
         id="clang_opt_level", flags=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os", "-Oz"]
